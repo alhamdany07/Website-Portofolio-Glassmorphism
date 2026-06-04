@@ -1,5 +1,5 @@
 # Website-Portofolio-Glassmorphism
-markdown_content = """
+
 <div align="center">
   <img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&height=250&section=header&text=Halo!%20Saya%20Putri%20Hikmawati&fontSize=50&animation=fadeIn" />
 </div>
