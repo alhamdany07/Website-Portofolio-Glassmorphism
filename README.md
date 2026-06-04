@@ -98,9 +98,4 @@ Punya ide menarik, proyek sistem informasi, atau sekadar ingin menyapa? Jangan r
 <p align="center">
   <img src="https://komarev.com/ghpvc/?username=YOUR_GITHUB_USERNAME&label=Profile%20views&color=0e75b6&style=flat" alt="Profile Views" />
 </p>
-"""
 
-with open("README.md", "w", encoding="utf-8") as f:
-    f.write(markdown_content)
-
-print("File README.md has been generated successfully.")
