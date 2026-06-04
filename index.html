@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Putri Hikmawati - Portfolio & Storytelling</title>
+    <!-- Google Fonts: Plus Jakarta Sans (Modern & Clean) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- GSAP for Smooth Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.321.0/dist/umd/lucide.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        iosBlue: '#007AFF',
+                        iosGreen: '#34C759',
+                        iosPurple: '#AF52DE',
+                        iosPink: '#FF2D55',
+                        iosDarkBg: '#090A10', /* Velvet deep space dark */
+                    },
+                    backdropBlur: {
+                        xs: '4px',
+                        md: '16px',
+                        xl: '40px',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom scrollbar iOS style */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.01);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.12);
+            border-radius: 99px;
+            backdrop-filter: blur(10px);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Perfect Balanced Glassmorphism - Neither too dark nor too bright */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(25px) saturate(140%);
+            -webkit-backdrop-filter: blur(25px) saturate(140%);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        /* High-Contrast Interactive Cards with Apple Spring Motion curves */
+        .glass-card-interactive {
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(20px) saturate(140%);
+            -webkit-backdrop-filter: blur(20px) saturate(140%);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card-interactive:hover {
+            transform: translateY(-6px) scale(1.015);
+            background: rgba(255, 255, 255, 0.14);
+            border-color: rgba(255, 255, 255, 0.28);
+            box-shadow: 0 20px 45px -15px rgba(0, 122, 255, 0.35);
+        }
+
+        /* Custom glow elements */
+        .glowing-orb {
+            filter: blur(120px);
+            opacity: 0.35;
+            mix-blend-mode: plus-lighter;
+            pointer-events: none;
+            transition: all 1s ease;
+        }
+
+        /* iOS active state dynamic dot animation */
+        .nav-active::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background-color: #007AFF;
+            box-shadow: 0 0 10px #007AFF;
+        }
+
+        /* Guarantee visibility for skill cards on both desktop and mobile */
+        .skill-card-item {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .skill-card-item.reveal-visible {
+            opacity: 1 !important;
+            transform: translateY(0) !important;
+        }
+        .typing-dot {
+            animation: typing 1.4s infinite ease-in-out both;
+        }
+        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="bg-iosDarkBg text-slate-100 min-h-screen overflow-x-hidden selection:bg-iosBlue/30 selection:text-white">
+
+    <div class="fixed inset-0 overflow-hidden z-0 pointer-events-none">
+        <div id="orb-1" class="glowing-orb absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-gradient-to-tr from-cyan-500/80 to-blue-600/80"></div>
+        <div id="orb-2" class="glowing-orb absolute top-[40%] right-[-10%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-br from-indigo-500/60 via-purple-600/60 to-pink-500/60"></div>
+        <div id="orb-3" class="glowing-orb absolute bottom-[-15%] left-[20%] w-[55vw] h-[55vw] rounded-full bg-gradient-to-tr from-fuchsia-600/50 to-rose-500/50"></div>
+    </div>
+
+    <div id="ios-notification" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-sm glass-panel rounded-3xl p-4 shadow-2xl flex items-center space-x-3 transform translate-y-[-150%] opacity-0 transition-all duration-700 ease-out">
+        <div class="w-10 h-10 rounded-2xl bg-iosBlue flex items-center justify-center text-white shadow-lg shadow-iosBlue/30">
+            <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
+        <div class="flex-1">
+            <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold tracking-wider text-slate-400 uppercase">Sistem Informasi</span>
+                <span class="text-[10px] text-slate-500">Baru Saja</span>
+            </div>
+            <p class="text-sm font-medium text-white" id="notification-text">Halo! Selamat datang di portofolio interaktifku.</p>
+        </div>
+    </div>
+
+    <header class="fixed top-5 left-1/2 -translate-x-1/2 z-40 w-[92%] max-w-4xl">
+        <nav class="glass-panel rounded-full px-6 py-3.5 flex items-center justify-between shadow-lg shadow-black/10 transition-all duration-300">
+            <!-- Brand / Logo -->
+            <a href="#hero" class="flex items-center space-x-2 group">
+                <!-- Flat Minimalist iOS Blue Profile Background -->
+                <div class="w-8 h-8 rounded-full bg-iosBlue flex items-center justify-center overflow-hidden shadow-md">
+                    <svg viewBox="0 0 100 100" class="w-full h-full bg-iosBlue">
+                        <circle cx="50" cy="50" r="45" fill="#007AFF" />
+                        <path d="M 30,55 C 25,35 35,20 50,20 C 65,20 75,35 70,55" fill="#1E293B" />
+                        <rect x="46" y="55" width="8" height="10" rx="3" fill="#FDBA74" />
+                        <circle cx="50" cy="46" r="16" fill="#FED7AA" />
+                        <path d="M 34,42 C 34,30 45,24 50,28 C 55,24 66,30 66,42 Z" fill="#1E293B" />
+                        <circle cx="44" cy="45" r="5" fill="none" stroke="#FFFFFF" stroke-width="1.5" />
+                        <circle cx="56" cy="45" r="5" fill="none" stroke="#FFFFFF" stroke-width="1.5" />
+                        <path d="M 47,51 Q 50,54 53,51" fill="none" stroke="#1E293B" stroke-width="1.2" />
+                    </svg>
+                </div>
+                <span class="font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-slate-200 to-slate-400 text-sm md:text-base group-hover:from-iosBlue transition-all duration-300">
+                    Putri Hikmawati.
+                </span>
+            </a>
+
+            <!-- Menu Links (Desktop) -->
+            <div class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
+                <a href="#hero" class="relative hover:text-white transition-colors duration-200 nav-link nav-active" data-section="hero">Home</a>
+                <a href="#story" class="relative hover:text-white transition-colors duration-200 nav-link" data-section="story">Story</a>
+                <a href="#experience" class="relative hover:text-white transition-colors duration-200 nav-link" data-section="experience">Kampus</a>
+                <a href="#skills" class="relative hover:text-white transition-colors duration-200 nav-link" data-section="skills">Keahlian</a>
+                <a href="#contact" class="relative hover:text-white transition-colors duration-200 nav-link" data-section="contact">Hubungi</a>
+            </div>
+
+            <!-- Right Control Elements -->
+            <div class="flex items-center space-x-4">
+                <button onclick="triggerNotification('✨ Semoga harimu menyenangkan! Terima kasih sudah mampir.')" class="p-2 rounded-full hover:bg-white/10 text-slate-300 hover:text-white transition-colors">
+                    <i data-lucide="bell" class="w-4 h-4"></i>
+                </button>
+                <a href="#contact" class="hidden sm:inline-flex items-center space-x-2 text-xs font-semibold bg-white text-iosDarkBg hover:bg-slate-200 px-4 py-2 rounded-full transition-all shadow-md active:scale-95">
+                    <span>Mari Bicara</span>
+                    <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+                </a>
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-btn" class="md:hidden p-2 rounded-full hover:bg-white/10 text-white">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </nav>
+
+        <div id="mobile-menu" class="hidden mt-3 w-full glass-panel rounded-3xl p-6 shadow-2xl flex-col space-y-4 text-center transform scale-95 opacity-0 transition-all duration-300 origin-top">
+            <a href="#hero" class="mobile-nav-link text-lg font-medium text-slate-300 hover:text-white py-2 block border-b border-white/5">Home</a>
+            <a href="#story" class="mobile-nav-link text-lg font-medium text-slate-300 hover:text-white py-2 block border-b border-white/5">Story</a>
+            <a href="#experience" class="mobile-nav-link text-lg font-medium text-slate-300 hover:text-white py-2 block border-b border-white/5">Kampus</a>
+            <a href="#skills" class="mobile-nav-link text-lg font-medium text-slate-300 hover:text-white py-2 block border-b border-white/5">Keahlian</a>
+            <a href="#contact" class="mobile-nav-link text-lg font-medium text-slate-300 hover:text-white py-2 block">Hubungi</a>
+        </div>
+    </header>
+
+    <main class="relative z-10 pt-32 pb-24 px-4 max-w-7xl mx-auto flex flex-col justify-center items-center min-h-screen" id="hero">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 w-full items-center">
+            
+            <!-- Left Column: Introduction Text -->
+            <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                <div class="inline-flex items-center space-x-2 bg-iosBlue/10 border border-iosBlue/30 text-iosBlue px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide uppercase shadow-sm">
+                    <span class="animate-pulse inline-block w-2 h-2 rounded-full bg-iosBlue"></span>
+                    <span>Sistem Informasi • Universitas Musamus</span>
+                </div>
+
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-[1.1] text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-100 to-slate-400">
+                    Putri <br class="hidden lg:inline">
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-iosBlue via-cyan-400 to-iosPurple">Hikmawati</span>
+                </h1>
+
+                <p class="text-base sm:text-lg md:text-xl text-slate-300 font-light max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+                    Menjembatani keindahan teknologi dengan analisis sistem yang kuat di gerbang timur Indonesia, Universitas Musamus Merauke. Menulis cerita masa depan melalui data dan desain.
+                </p>
+
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
+                    <a href="#story" class="inline-flex items-center space-x-2.5 bg-gradient-to-r from-iosBlue to-iosPurple text-white px-7 py-3.5 rounded-full font-semibold shadow-lg shadow-iosBlue/25 hover:shadow-iosBlue/40 hover:scale-105 active:scale-95 transition-all">
+                        <span>Mulai Membaca Cerita</span>
+                        <i data-lucide="book-open" class="w-5 h-5"></i>
+                    </a>
+                    <a href="#contact" class="inline-flex items-center space-x-2 bg-white/5 border border-white/10 hover:bg-white/10 text-white px-7 py-3.5 rounded-full font-semibold hover:scale-105 active:scale-95 transition-all backdrop-blur-md">
+                        <span>Hubungi</span>
+                        <i data-lucide="mail" class="w-5 h-5"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 w-full flex justify-center">
+                <div class="w-full max-w-[420px] aspect-[9/16] glass-panel rounded-[50px] p-5 shadow-2xl relative border-4 border-slate-700/50 flex flex-col justify-between overflow-hidden">
+                    
+                    <!-- iPhone Island & Status Bar -->
+                    <div class="absolute top-2 left-1/2 -translate-x-1/2 w-32 h-6 bg-black rounded-full z-20 flex items-center justify-center">
+                        <div class="absolute right-4 w-2 h-2 rounded-full bg-slate-900"></div>
+                    </div>
+                    <div class="flex justify-between items-center text-[11px] text-white/90 px-3 pt-1 font-semibold">
+                        <span id="ios-clock">09:41</span>
+                        <div class="flex items-center space-x-1.5">
+                            <i data-lucide="signal" class="w-3.5 h-3.5"></i>
+                            <span class="text-[10px]">5G</span>
+                            <i data-lucide="battery" class="w-4 h-4 text-iosGreen"></i>
+                        </div>
+                    </div>
+
+                    <!-- App Widget Grid Inside Mockup -->
+                    <div class="flex-1 mt-6 flex flex-col space-y-4 overflow-y-auto no-scrollbar py-2">
+                        
+                        <!-- Portrait Profil Card (Single-Color flat Blue backplate) -->
+                        <div class="glass-panel bg-white/10 rounded-2xl p-3 flex items-center space-x-3.5 border-l-4 border-iosPurple">
+                            <div class="relative flex-shrink-0">
+                                <div class="relative w-12 h-12 rounded-full overflow-hidden border border-white/20 bg-iosBlue flex items-center justify-center">
+                                    <svg viewBox="0 0 100 100" class="w-full h-full bg-iosBlue">
+                                        <circle cx="50" cy="50" r="45" fill="#007AFF" />
+                                        <path d="M 30,55 C 25,35 35,20 50,20 C 65,20 75,35 70,55" fill="#1E293B" />
+                                        <rect x="46" y="55" width="8" height="10" rx="3" fill="#FDBA74" />
+                                        <circle cx="50" cy="46" r="16" fill="#FED7AA" />
+                                        <path d="M 34,42 C 34,30 45,24 50,28 C 55,24 66,30 66,42 C 66,42 62,34 50,34 C 38,34 34,42 34,42 Z" fill="#1E293B" />
+                                        <circle cx="43" cy="45" r="4.5" fill="none" stroke="#FFFFFF" stroke-width="1.3" />
+                                        <circle cx="57" cy="45" r="4.5" fill="none" stroke="#FFFFFF" stroke-width="1.3" />
+                                        <line x1="47.5" y1="45" x2="52.5" y2="45" stroke="#FFFFFF" stroke-width="1.3" />
+                                        <path d="M 47,51 Q 50,54 53,51" fill="none" stroke="#1E293B" stroke-width="1.2" stroke-linecap="round" />
+                                        <path d="M 35,72 L 65,72 L 60,60 L 40,60 Z" fill="#475569" />
+                                        <rect x="42" y="62" width="16" height="8" rx="1" fill="#0F172A" />
+                                        <line x1="44" y1="64" x2="48" y2="64" stroke="#34C759" stroke-width="0.8" />
+                                        <line x1="44" y1="66" x2="52" y2="66" stroke="#007AFF" stroke-width="0.8" />
+                                    </svg>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white flex items-center space-x-1">
+                                    <span>Putri Hikmawati</span>
+                                    <span class="inline-block w-2.5 h-2.5 bg-iosGreen rounded-full border border-black/30" title="Aktif"></span>
+                                </h4>
+                                <p class="text-[11px] text-slate-300">Sistem Informasi '23</p>
+                                <p class="text-[10px] text-iosPurple font-semibold mt-0.5">Universitas Musamus</p>
+                            </div>
+                        </div>
+
+                        <!-- 2x2 Grid Widgets -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <!-- Widget 1: Merauke Weather & Location -->
+                            <div class="glass-panel bg-gradient-to-b from-sky-400/20 to-sky-600/10 rounded-2xl p-3 flex flex-col justify-between h-28 relative overflow-hidden group hover:scale-[1.03] transition-transform">
+                                <span class="absolute right-2 top-2 text-2xl animate-spin-slow">☀️</span>
+                                <div>
+                                    <span class="text-[10px] text-slate-400 uppercase font-bold">Cuaca</span>
+                                    <h5 class="text-xs font-extrabold text-white">Merauke, ID</h5>
+                                </div>
+                                <div>
+                                    <p class="text-xl font-black text-white">31°C</p>
+                                    <p class="text-[9px] text-sky-300">Bumi Anim Ha</p>
+                                </div>
+                            </div>
+
+                            <!-- Widget 2: Musamus Quick Info -->
+                            <div class="glass-panel bg-gradient-to-br from-iosPurple/20 to-purple-900/10 rounded-2xl p-3 flex flex-col justify-between h-28 hover:scale-[1.03] transition-transform">
+                                <div class="flex justify-between items-start">
+                                    <span class="text-[10px] text-slate-400 uppercase font-bold">Kampus</span>
+                                    <i data-lucide="graduation-cap" class="w-4 h-4 text-iosPurple"></i>
+                                </div>
+                                <div>
+                                    <h5 class="text-xs font-extrabold text-white">Musamus</h5>
+                                    <p class="text-[9px] text-slate-300">Merauke - Papua Selatan</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Full Width Widget: Dynamic Media Player -->
+                        <!-- Full Width Widget: Spotify Iframe Embed -->
+                        <div class="glass-panel bg-black/40 rounded-2xl p-1 flex items-center justify-center border border-white/10 overflow-hidden">
+                            <!-- Ganti link src di bawah ini dengan link embed Spotify lagu pilihanmu -->
+                            <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/4GyG53nBdaEvSEn9o8roA2?utm_source=generator" width="100%" height="80" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                        </div>
+
+                        <!-- Interactive Status Slider -->
+                        <div class="glass-panel bg-white/5 rounded-2xl p-3 space-y-2">
+                            <div class="flex justify-between text-[11px] text-slate-300">
+                                <span class="font-semibold">Semangat Hari Ini</span>
+                                <span id="spirit-percent" class="font-bold text-iosBlue">95%</span>
+                            </div>
+                            <div class="relative w-full h-2 bg-white/10 rounded-full overflow-hidden cursor-pointer" onclick="updateSpirit(event)">
+                                <div id="spirit-bar" class="absolute top-0 left-0 h-full w-[95%] bg-gradient-to-r from-iosBlue to-cyan-400 transition-all duration-300"></div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- iPhone Bottom Bar -->
+                    <div class="flex justify-center pt-2">
+                        <div class="w-32 h-1 bg-white/30 rounded-full"></div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <section class="relative z-10 py-24 px-4 bg-black/30 backdrop-blur-xs" id="story">
+        <div class="max-w-4xl mx-auto">
+            
+            <div class="text-center mb-16 space-y-4">
+                <div class="inline-flex items-center space-x-2 bg-iosPurple/10 border border-iosPurple/30 text-iosPurple px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider">
+                    <i data-lucide="history" class="w-3.5 h-3.5"></i>
+                    <span>Sebuah Narasi Perjalanan</span>
+                </div>
+                <h2 class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-400">
+                    Kisah Putri Hikmawati
+                </h2>
+                <p class="text-slate-400 text-sm md:text-base max-w-xl mx-auto">
+                    Gulir ke bawah untuk menelusuri bab demi bab petualangan akademik dan aspirasi teknologi saya.
+                </p>
+            </div>
+
+            <!-- Vertical Timeline Story Grid -->
+            <div class="relative border-l border-white/15 ml-4 md:ml-32 space-y-16 py-8">
+                
+                <!-- Timeline Story Card 1 -->
+                <div class="relative pl-8 group story-card">
+                    <span class="absolute -left-3 top-1 w-6 h-6 rounded-full bg-iosDarkBg border-2 border-iosBlue flex items-center justify-center transition-all group-hover:bg-iosBlue group-hover:scale-125 duration-300 shadow shadow-iosBlue/40">
+                        <span class="w-2 h-2 rounded-full bg-iosBlue group-hover:bg-white"></span>
+                    </span>
+                    <span class="absolute hidden md:block -left-32 top-1 text-right text-xs uppercase font-extrabold text-iosBlue/60 tracking-wider">
+                        Bab 1
+                    </span>
+
+                    <div class="glass-panel glass-card-interactive rounded-3xl p-6 md:p-8 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-iosBlue uppercase tracking-widest">Titik Awal (Genesis)</span>
+                            <span class="text-xs text-slate-400">2023</span>
+                        </div>
+                        <h3 class="text-xl md:text-2xl font-bold text-white">Menemukan Dunia Sistem Informasi</h3>
+                        <p class="text-slate-300 leading-relaxed text-sm md:text-base">
+                            Semua berawal dari rasa ingin tahu yang besar tentang bagaimana teknologi bekerja di balik layar. Sistem Informasi menjadi pilihan karena tidak hanya tentang baris kode, tetapi juga tentang perannya dalam memecahkan masalah nyata dan menganalisis kebutuhan manusia melalui data.
+                        </p>
+                        <blockquote class="border-l-4 border-iosBlue pl-4 text-xs italic text-slate-400">
+                            "Teknologi terbaik adalah teknologi yang melayani dan mempermudah kehidupan manusia."
+                        </blockquote>
+                    </div>
+                </div>
+
+                <!-- Timeline Story Card 2 -->
+                <div class="relative pl-8 group story-card">
+                    <span class="absolute -left-3 top-1 w-6 h-6 rounded-full bg-iosDarkBg border-2 border-iosPurple flex items-center justify-center transition-all group-hover:bg-iosPurple group-hover:scale-125 duration-300 shadow shadow-iosPurple/40">
+                        <span class="w-2 h-2 rounded-full bg-iosPurple group-hover:bg-white"></span>
+                    </span>
+                    <span class="absolute hidden md:block -left-32 top-1 text-right text-xs uppercase font-extrabold text-iosPurple/60 tracking-wider">
+                        Bab 2
+                    </span>
+
+                    <div class="glass-panel glass-card-interactive rounded-3xl p-6 md:p-8 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-iosPurple uppercase tracking-widest">Tempat Berlabuh</span>
+                            <span class="text-xs text-slate-400">Universitas Musamus</span>
+                        </div>
+                        <h3 class="text-xl md:text-2xl font-bold text-white">Belajar di Ujung Timur Indonesia</h3>
+                        <p class="text-slate-300 leading-relaxed text-sm md:text-base">
+                            Universitas Musamus Merauke yang terletak di wilayah perbatasan nusantara menyuguhkan tantangan sekaligus inspirasi tiada henti. Di sinilah saya belajar menghargai setiap koneksi internet, berkolaborasi dengan talenta lokal, dan mengeksplorasi potensi digital daerah.
+                        </p>
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="text-[10px] bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300">Merauke</span>
+                            <span class="text-[10px] bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300">Papua Selatan</span>
+                            <span class="text-[10px] bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300">Bumi Anim Ha</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Story Card 3 -->
+                <div class="relative pl-8 group story-card">
+                    <span class="absolute -left-3 top-1 w-6 h-6 rounded-full bg-iosDarkBg border-2 border-iosPink flex items-center justify-center transition-all group-hover:bg-iosPink group-hover:scale-125 duration-300 shadow shadow-iosPink/40">
+                        <span class="w-2 h-2 rounded-full bg-iosPink group-hover:bg-white"></span>
+                    </span>
+                    <span class="absolute hidden md:block -left-32 top-1 text-right text-xs uppercase font-extrabold text-iosPink/60 tracking-wider">
+                        Bab 3
+                    </span>
+
+                    <div class="glass-panel glass-card-interactive rounded-3xl p-6 md:p-8 space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-iosPink uppercase tracking-widest">Visi Masa Depan</span>
+                            <span class="text-xs text-slate-400">Aspirasi</span>
+                        </div>
+                        <h3 class="text-xl md:text-2xl font-bold text-white">Menjadi Katalis Perubahan Digital</h3>
+                        <p class="text-slate-300 leading-relaxed text-sm md:text-base">
+                            Ke depan, saya ingin menjadi seorang Analis Sistem yang andal. Saya bermimpi merancang sistem informasi yang inklusif untuk mempermudah akses pendidikan, perdagangan, dan administrasi digital, khususnya bagi wilayah timur Indonesia demi pemerataan kesejahteraan digital nasional.
+                        </p>
+                        <div class="flex items-center space-x-2 text-xs text-iosPink font-bold pt-2">
+                            <span>Impian & Dedikasi</span>
+                            <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="relative z-10 py-24 px-4 max-w-7xl mx-auto" id="experience">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <!-- Left Grid: Campus Glass Illustration Card -->
+            <div class="lg:col-span-5 flex justify-center">
+                <div class="relative w-full max-w-[400px]">
+                    <div class="absolute -inset-4 bg-gradient-to-tr from-iosBlue via-cyan-400 to-iosPurple rounded-[40px] opacity-20 blur-xl animate-pulse"></div>
+                    
+                    <!-- Main Card -->
+                    <div class="relative glass-panel rounded-[38px] p-6 shadow-2xl border border-white/10 space-y-6">
+                        <div class="flex justify-between items-center">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-2.5 h-2.5 rounded-full bg-iosPink"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-yellow-400"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-iosGreen"></div>
+                            </div>
+                            <span class="text-[10px] text-slate-400 uppercase tracking-widest font-extrabold">Akademik</span>
+                        </div>
+
+                        <!-- Universitas Musamus Emblem Placeholder -->
+                        <div class="h-44 bg-gradient-to-tr from-iosBlue/20 via-purple-500/10 to-transparent rounded-2xl flex flex-col items-center justify-center p-4 border border-white/5 text-center relative overflow-hidden">
+                            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-iosBlue/10 via-transparent to-transparent"></div>
+                            <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mb-3 shadow">
+                                <i data-lucide="graduation-cap" class="w-8 h-8 text-white"></i>
+                            </div>
+                            <h4 class="text-sm font-extrabold text-white">Universitas Musamus Merauke</h4>
+                            <p class="text-[10px] text-slate-300">"Sains, Teknologi, dan Pengabdian"</p>
+                        </div>
+
+                        <!-- Statistics -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="glass-panel bg-white/5 p-3 rounded-xl text-center">
+                                <span class="text-xl font-black text-iosBlue">5+</span>
+                                <p class="text-[10px] text-slate-400 uppercase font-semibold">Proyek Sistem</p>
+                            </div>
+                            <div class="glass-panel bg-white/5 p-3 rounded-xl text-center">
+                                <span class="text-xl font-black text-iosGreen">3.8+</span>
+                                <p class="text-[10px] text-slate-400 uppercase font-semibold">Target IPK</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Grid: Campus Info -->
+            <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                <div class="inline-flex items-center space-x-2 bg-iosGreen/10 border border-iosGreen/30 text-iosGreen px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider">
+                    <i data-lucide="landmark" class="w-3.5 h-3.5"></i>
+                    <span>Lingkungan Kampus</span>
+                </div>
+                <h2 class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-400">
+                    Sistem Informasi di <br>Universitas Musamus
+                </h2>
+                <p class="text-slate-300 leading-relaxed text-sm md:text-base">
+                    Sebagai mahasiswi Universitas Musamus Merauke, saya ditempa untuk mandiri, kritis, dan solutif. Kurikulum Sistem Informasi mengajarkan kami cara melakukan perancangan basis data, analisis proses bisnis, hingga pengembangan aplikasi berbasis web dan mobile.
+                </p>
+
+                <!-- Features list -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 text-left">
+                    <div class="flex items-start space-x-3 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors">
+                        <span class="p-2 rounded-lg bg-iosBlue/20 text-iosBlue mt-0.5">
+                            <i data-lucide="database" class="w-4 h-4"></i>
+                        </span>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Analisis Basis Data</h4>
+                            <p class="text-xs text-slate-400">Merancang relasi data yang efisien dan andal.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors">
+                        <span class="p-2 rounded-lg bg-iosPurple/20 text-iosPurple mt-0.5">
+                            <i data-lucide="workflow" class="w-4 h-4"></i>
+                        </span>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Analisis Proses Bisnis</h4>
+                            <p class="text-xs text-slate-400">Memetakan proses kerja bisnis agar efisien lewat IT.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors">
+                        <span class="p-2 rounded-lg bg-iosPink/20 text-iosPink mt-0.5">
+                            <i data-lucide="layout" class="w-4 h-4"></i>
+                        </span>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">UI/UX & Desain Sistem</h4>
+                            <p class="text-xs text-slate-400">Merancang antarmuka sistem yang berorientasi pengguna.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3 p-3 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors">
+                        <span class="p-2 rounded-lg bg-iosGreen/20 text-iosGreen mt-0.5">
+                            <i data-lucide="code" class="w-4 h-4"></i>
+                        </span>
+                        <div>
+                            <h4 class="text-sm font-bold text-white">Pengembangan Web</h4>
+                            <p class="text-xs text-slate-400">Mempelajari framework modern untuk solusi interaktif.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="relative z-10 py-24 px-4 bg-black/40 border-t border-b border-white/5" id="skills">
+        <div class="max-w-7xl mx-auto">
+            
+            <div class="text-center mb-16 space-y-4">
+                <div class="inline-flex items-center space-x-2 bg-cyan-400/10 border border-cyan-400/30 text-cyan-400 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider">
+                    <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+                    <span>Arsitektur Kemampuan</span>
+                </div>
+                <h2 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-b from-white to-slate-400">
+                    Keahlian & Perkakas Kerja
+                </h2>
+                <p class="text-slate-300 text-sm md:text-base max-w-xl mx-auto">
+                    Kombinasi komprehensif antara perancangan sistem terstruktur dan fungsionalitas estetika visual.
+                </p>
+            </div>
+
+            <!-- Bento Grid - Premium and fully visible on both desktop & mobile -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="skills-grid-container">
+                
+                <!-- Card 1: UI & UX Design -->
+                <div class="skill-card-item glass-panel rounded-[32px] p-6 md:p-8 flex flex-col justify-between border border-iosBlue/30 hover:border-iosBlue/70 shadow-lg shadow-iosBlue/10 transition-all duration-300 active:scale-98 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-iosBlue/10 rounded-full blur-3xl pointer-events-none"></div>
+                    
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-14 h-14 rounded-2xl bg-iosBlue/10 border border-iosBlue/30 flex items-center justify-center text-iosBlue shadow-inner">
+                            <i data-lucide="palette" class="w-7 h-7"></i>
+                        </div>
+                        <span class="text-xs font-black text-iosBlue bg-iosBlue/20 border border-iosBlue/30 px-3 py-1 rounded-full uppercase tracking-wider">90%</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">UI & UX Design</h3>
+                            <p class="text-slate-300 text-sm mt-1 leading-relaxed">
+                                Merancang antarmuka sistem yang berorientasi pengguna dengan estetika modern iOS, wireframing detail, dan prototipe interaktif.
+                            </p>
+                        </div>
+
+                        <!-- Skill Level Bar -->
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-xs font-semibold text-slate-400">
+                                <span>Kemampuan Desain</span>
+                                <span>Keahlian Utama</span>
+                            </div>
+                            <div class="w-full bg-white/10 h-2.5 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-iosBlue to-cyan-400 h-full w-[90%] rounded-full shadow-lg shadow-iosBlue/40"></div>
+                            </div>
+                        </div>
+
+                        <!-- Mini Interactive Tool (Figma Screen Sim) -->
+                        <div class="bg-black/50 border border-white/10 rounded-2xl p-3.5 space-y-3">
+                            <div class="flex items-center justify-between text-xs font-bold text-slate-400">
+                                <span>Preview Prototipe</span>
+                                <div class="flex space-x-1.5">
+                                    <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                                    <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
+                                    <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900 border border-white/5 rounded-xl p-4 text-center text-xs relative overflow-hidden h-28 flex flex-col justify-center items-center">
+                                <p id="prototype-screen-text" class="text-slate-200 font-bold transition-all duration-300">Layar 1: Dasbor Utama</p>
+                                <p class="text-[10px] text-slate-400 mt-1">Status: Terkoneksi</p>
+                                <button onclick="simulPrototype(this)" class="mt-3 bg-iosBlue text-white font-bold text-[11px] px-3 py-1.5 rounded-lg hover:bg-blue-600 transition-colors active:scale-95 shadow">
+                                    Ganti Layar Interaktif
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Tech Badges -->
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="text-xs bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300 flex items-center space-x-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-iosBlue"></span>
+                                <span>Figma</span>
+                            </span>
+                            <span class="text-xs bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300 flex items-center space-x-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-iosBlue"></span>
+                                <span>Adobe XD</span>
+                            </span>
+                            <span class="text-xs bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300 flex items-center space-x-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-iosBlue"></span>
+                                <span>Prototyping</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 2: System Analysis -->
+                <div class="skill-card-item glass-panel rounded-[32px] p-6 md:p-8 flex flex-col justify-between border border-iosPurple/30 hover:border-iosPurple/70 shadow-lg shadow-iosPurple/10 transition-all duration-300 active:scale-98 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-iosPurple/10 rounded-full blur-3xl pointer-events-none"></div>
+                    
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-14 h-14 rounded-2xl bg-iosPurple/10 border border-iosPurple/30 flex items-center justify-center text-iosPurple shadow-inner">
+                            <i data-lucide="git-branch" class="w-7 h-7"></i>
+                        </div>
+                        <span class="text-xs font-black text-iosPurple bg-iosPurple/20 border border-iosPurple/30 px-3 py-1 rounded-full uppercase tracking-wider">85%</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">System Analysis</h3>
+                            <p class="text-slate-300 text-sm mt-1 leading-relaxed">
+                                Menganalisis alur bisnis kompleks, memetakan kebutuhan sistem, merancang dokumentasi UML (Use Case, Activity Diagram), dan merancang solusi arsitektur IT.
+                            </p>
+                        </div>
+
+                        <!-- Skill Level Bar -->
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-xs font-semibold text-slate-400">
+                                <span>Analisis Proses</span>
+                                <span>Metodologi Agile</span>
+                            </div>
+                            <div class="w-full bg-white/10 h-2.5 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-iosPurple to-fuchsia-500 h-full w-[85%] rounded-full shadow-lg shadow-iosPurple/40"></div>
+                            </div>
+                        </div>
+
+                        <!-- Mini Interactive Tool (UML/Workflow Flow) -->
+                        <div class="bg-black/50 border border-white/10 rounded-2xl p-3.5 space-y-3">
+                            <div class="flex items-center justify-between text-xs font-bold text-slate-400">
+                                <span>Simulator Alur Proses</span>
+                                <span class="text-iosPurple font-black">SDLC</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 text-center text-[10px] font-bold">
+                                <div id="flow-step-1" class="bg-iosPurple text-white p-2 rounded-lg border border-iosPurple/50 transition-all">Analisis</div>
+                                <div id="flow-step-2" class="bg-slate-900 text-slate-400 p-2 rounded-lg border border-white/5 transition-all">Desain</div>
+                                <div id="flow-step-3" class="bg-slate-900 text-slate-400 p-2 rounded-lg border border-white/5 transition-all">Koding</div>
+                            </div>
+                            <button onclick="simulFlow()" class="w-full bg-iosPurple text-white font-bold text-[11px] py-1.5 rounded-lg hover:bg-purple-600 transition-colors active:scale-95 shadow">
+                                Langkah Selanjutnya <i data-lucide="chevrons-right" class="inline-block w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+
+                        <!-- Tech Badges -->
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="text-xs bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300 flex items-center space-x-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-iosPurple"></span>
+                                <span>UML Diagram</span>
+                            </span>
+                            <span class="text-xs bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300 flex items-center space-x-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-iosPurple"></span>
+                                <span>DFD / Flowchart</span>
+                            </span>
+                            <span class="text-xs bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300 flex items-center space-x-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-iosPurple"></span>
+                                <span>Miro</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 3: Database Design -->
+                <div class="skill-card-item glass-panel rounded-[32px] p-6 md:p-8 flex flex-col justify-between border border-iosPink/30 hover:border-iosPink/70 shadow-lg shadow-iosPink/10 transition-all duration-300 active:scale-98 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-iosPink/10 rounded-full blur-3xl pointer-events-none"></div>
+                    
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-14 h-14 rounded-2xl bg-iosPink/10 border border-iosPink/30 flex items-center justify-center text-iosPink shadow-inner">
+                            <i data-lucide="database" class="w-7 h-7"></i>
+                        </div>
+                        <span class="text-xs font-black text-iosPink bg-iosPink/20 border border-iosPink/30 px-3 py-1 rounded-full uppercase tracking-wider">80%</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Database Design</h3>
+                            <p class="text-slate-300 text-sm mt-1 leading-relaxed">
+                                Merancang skema relasi basis data (ERD), menyusun query optimal, melakukan normalisasi data, serta melakukan tata kelola data yang aman.
+                            </p>
+                        </div>
+
+                        <!-- Skill Level Bar -->
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-xs font-semibold text-slate-400">
+                                <span>Struktur Data</span>
+                                <span>SQL Query</span>
+                            </div>
+                            <div class="w-full bg-white/10 h-2.5 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-iosPink to-rose-500 h-full w-[80%] rounded-full shadow-lg shadow-iosPink/40"></div>
+                            </div>
+                        </div>
+
+                        <!-- Mini Interactive Tool (SQL Simulator) -->
+                        <div class="bg-black/50 border border-white/10 rounded-2xl p-3.5 space-y-3">
+                            <div class="flex items-center justify-between text-xs font-bold text-slate-400">
+                                <span>Konsol Query SQL</span>
+                                <span class="text-iosPink font-black">MySQL</span>
+                            </div>
+                            <div class="bg-slate-900 border border-white/5 rounded-xl p-3 font-mono text-[10px] text-green-400 min-h-16 flex flex-col justify-center">
+                                <p id="sql-query-line" class="text-slate-400">SELECT * FROM mahasiswa WHERE nama='Putri';</p>
+                                <p id="sql-result-line" class="mt-2 text-white font-sans hidden">Hasil: [1 Row Found] IPK: 3.90</p>
+                            </div>
+                            <button onclick="simulQuery()" class="w-full bg-iosPink text-white font-bold text-[11px] py-1.5 rounded-lg hover:bg-rose-600 transition-colors active:scale-95 shadow">
+                                Jalankan Query <i data-lucide="play" class="inline-block w-3 h-3 ml-1"></i>
+                            </button>
+                        </div>
+
+                        <!-- Tech Badges -->
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="text-xs bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300 flex items-center space-x-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-iosPink"></span>
+                                <span>MySQL / SQL</span>
+                            </span>
+                            <span class="text-xs bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300 flex items-center space-x-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-iosPink"></span>
+                                <span>PostgreSQL</span>
+                            </span>
+                            <span class="text-xs bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300 flex items-center space-x-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-iosPink"></span>
+                                <span>ERD / DB Design</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card 4: Frontend Development -->
+                <div class="skill-card-item glass-panel rounded-[32px] p-6 md:p-8 flex flex-col justify-between border border-iosGreen/30 hover:border-iosGreen/70 shadow-lg shadow-iosGreen/10 transition-all duration-300 active:scale-98 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-32 h-32 bg-iosGreen/10 rounded-full blur-3xl pointer-events-none"></div>
+                    
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-14 h-14 rounded-2xl bg-iosGreen/10 border border-iosGreen/30 flex items-center justify-center text-iosGreen shadow-inner">
+                            <i data-lucide="code" class="w-7 h-7"></i>
+                        </div>
+                        <span class="text-xs font-black text-iosGreen bg-iosGreen/20 border border-iosGreen/30 px-3 py-1 rounded-full uppercase tracking-wider">85%</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <h3 class="text-2xl font-bold text-white">Frontend Web</h3>
+                            <p class="text-slate-300 text-sm mt-1 leading-relaxed">
+                                Membangun antarmuka web interaktif yang modern menggunakan HTML5, Tailwind CSS, JavaScript murni, dan integrasi kerangka kerja web responsif.
+                            </p>
+                        </div>
+
+                        <!-- Skill Level Bar -->
+                        <div class="space-y-1.5">
+                            <div class="flex justify-between text-xs font-semibold text-slate-400">
+                                <span>Responsivitas UI</span>
+                                <span>Tailwind CSS</span>
+                            </div>
+                            <div class="w-full bg-white/10 h-2.5 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-iosGreen to-emerald-400 h-full w-[85%] rounded-full shadow-lg shadow-iosGreen/40"></div>
+                            </div>
+                        </div>
+
+                        <!-- Mini Interactive Tool (Anim Sandbox) -->
+                        <div class="bg-black/50 border border-white/10 rounded-2xl p-3.5 space-y-3">
+                            <div class="flex items-center justify-between text-xs font-bold text-slate-400">
+                                <span>Simulator Animasi</span>
+                                <span class="text-iosGreen font-black">JS sandbox</span>
+                            </div>
+                            <div class="bg-slate-900 border border-white/5 rounded-xl p-3 flex justify-center items-center h-16 relative">
+                                <div id="anim-ball" class="w-8 h-8 rounded-full bg-gradient-to-r from-iosGreen to-emerald-400 flex items-center justify-center text-white text-[10px] font-bold shadow-md shadow-iosGreen/30">💻</div>
+                            </div>
+                            <div class="grid grid-cols-3 gap-1.5">
+                                <button onclick="triggerAnim('bounce')" class="bg-white/5 border border-white/10 text-white text-[10px] font-bold py-1.5 rounded-lg hover:bg-white/10 transition-colors active:scale-90">Pantul</button>
+                                <button onclick="triggerAnim('pulse')" class="bg-white/5 border border-white/10 text-white text-[10px] font-bold py-1.5 rounded-lg hover:bg-white/10 transition-colors active:scale-90">Glow</button>
+                                <button onclick="triggerAnim('spin')" class="bg-white/5 border border-white/10 text-white text-[10px] font-bold py-1.5 rounded-lg hover:bg-white/10 transition-colors active:scale-90">Putar</button>
+                            </div>
+                        </div>
+
+                        <!-- Tech Badges -->
+                        <div class="flex flex-wrap gap-2 pt-2">
+                            <span class="text-xs bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300 flex items-center space-x-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-iosGreen"></span>
+                                <span>HTML5/CSS3</span>
+                            </span>
+                            <span class="text-xs bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300 flex items-center space-x-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-iosGreen"></span>
+                                <span>Tailwind CSS</span>
+                            </span>
+                            <span class="text-xs bg-white/5 border border-white/10 px-3 py-1 rounded-full text-slate-300 flex items-center space-x-1">
+                                <span class="w-1.5 h-1.5 rounded-full bg-iosGreen"></span>
+                                <span>JavaScript / GSAP</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <section class="relative z-10 py-24 px-4 max-w-5xl mx-auto" id="contact">
+        <div class="glass-panel rounded-[40px] p-8 md:p-12 shadow-2xl relative overflow-hidden border border-white/10">
+            <div class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-iosBlue/10 blur-3xl pointer-events-none"></div>
+            <div class="absolute -left-20 -top-20 w-80 h-80 rounded-full bg-iosPurple/10 blur-3xl pointer-events-none"></div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 relative z-10">
+                
+                <!-- Left Grid: Social Handle Descriptions -->
+                <div class="lg:col-span-5 space-y-6 flex flex-col justify-between">
+                    <div class="space-y-4">
+                        <div class="inline-flex items-center space-x-2 bg-white/5 border border-white/10 px-3 py-1 rounded-full text-xs text-slate-300">
+                            <span class="w-2 h-2 rounded-full bg-iosBlue"></span>
+                            <span>Koneksi Global</span>
+                        </div>
+                        <h3 class="text-2xl md:text-4xl font-extrabold text-white leading-snug">Mari Berkolaborasi & Diskusi</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Punya ide menarik, proyek sistem informasi, atau sekadar ingin menyapa? Hubungi saya kapan saja. Saya siap berkolaborasi!
+                        </p>
+                    </div>
+
+                    <!-- Social Media Links (Premium Round Buttons) -->
+                    <div class="space-y-3 pt-4">
+                        <span class="text-xs font-extrabold text-slate-400 uppercase tracking-widest block">Sosial Media</span>
+                        <div class="flex items-center space-x-3">
+                            <!-- Instagram -->
+                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-2xl bg-white/5 hover:bg-gradient-to-tr hover:from-purple-600 hover:to-pink-500 border border-white/10 flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all shadow" title="Instagram">
+                                <i data-lucide="instagram" class="w-5 h-5"></i>
+                            </a>
+                            <!-- LinkedIn -->
+                            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-2xl bg-white/5 hover:bg-iosBlue border border-white/10 flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all shadow" title="LinkedIn">
+                                <i data-lucide="linkedin" class="w-5 h-5"></i>
+                            </a>
+                            <!-- Github -->
+                            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-2xl bg-white/5 hover:bg-slate-800 border border-white/10 flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all shadow" title="GitHub">
+                                <i data-lucide="github" class="w-5 h-5"></i>
+                            </a>
+                            <!-- Email Direct -->
+                            <a href="mailto:putri.hikmawati@example.com" class="w-12 h-12 rounded-2xl bg-white/5 hover:bg-iosPink border border-white/10 flex items-center justify-center text-white hover:scale-110 active:scale-95 transition-all shadow" title="Kirim Surat">
+                                <i data-lucide="mail" class="w-5 h-5"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Grid: Contact form inputs -->
+                <div class="lg:col-span-7">
+                    <form id="contact-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label for="name" class="text-xs font-semibold text-slate-300">Nama Lengkap</label>
+                                <input type="text" id="name" required class="w-full glass-panel bg-white/5 focus:bg-white/10 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-iosBlue focus:ring-1 focus:ring-iosBlue transition-all" placeholder="Nama Anda">
+                            </div>
+                            <div class="space-y-1">
+                                <label for="email" class="text-xs font-semibold text-slate-300">Alamat Email</label>
+                                <input type="email" id="email" required class="w-full glass-panel bg-white/5 focus:bg-white/10 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-iosBlue focus:ring-1 focus:ring-iosBlue transition-all" placeholder="nama@email.com">
+                            </div>
+                        </div>
+                        <div class="space-y-1">
+                            <label for="subject" class="text-xs font-semibold text-slate-300">Subjek Hubungan</label>
+                            <input type="text" id="subject" required class="w-full glass-panel bg-white/5 focus:bg-white/10 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-iosBlue focus:ring-1 focus:ring-iosBlue transition-all" placeholder="Proyek Sistem / Tanya Tanya">
+                        </div>
+                        <div class="space-y-1">
+                            <label for="message" class="text-xs font-semibold text-slate-300">Isi Pesan</label>
+                            <textarea id="message" rows="4" required class="w-full glass-panel bg-white/5 focus:bg-white/10 border border-white/10 rounded-2xl px-4 py-3 text-sm text-white focus:outline-none focus:border-iosBlue focus:ring-1 focus:ring-iosBlue transition-all resize-none" placeholder="Tuliskan pesan menarikmu disini..."></textarea>
+                        </div>
+                        <button type="submit" class="w-full inline-flex items-center justify-center space-x-2 bg-white text-iosDarkBg font-bold px-6 py-3.5 rounded-2xl hover:bg-slate-200 active:scale-95 transition-all shadow-lg">
+                            <span>Kirim Pesan</span>
+                            <i data-lucide="send" class="w-4 h-4"></i>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <footer class="relative z-10 border-t border-white/10 bg-black/50 backdrop-blur-md pt-12 pb-28 px-4">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+            <div class="flex items-center space-x-3">
+                <!-- Mini Profile Logo -->
+                <div class="w-10 h-10 rounded-full bg-iosBlue flex items-center justify-center overflow-hidden shadow-md">
+                    <svg viewBox="0 0 100 100" class="w-full h-full bg-iosBlue">
+                        <circle cx="50" cy="50" r="45" fill="#007AFF" />
+                        <path d="M 30,55 C 25,35 35,20 50,20 C 65,20 75,35 70,55" fill="#1E293B" />
+                        <rect x="46" y="55" width="8" height="10" rx="3" fill="#FDBA74" />
+                        <circle cx="50" cy="46" r="16" fill="#FED7AA" />
+                        <path d="M 34,42 C 34,30 45,24 50,28 C 55,24 66,30 66,42 Z" fill="#1E293B" />
+                        <circle cx="44" cy="45" r="5" fill="none" stroke="#FFFFFF" stroke-width="1.5" />
+                        <circle cx="56" cy="45" r="5" fill="none" stroke="#FFFFFF" stroke-width="1.5" />
+                        <path d="M 47,51 Q 50,54 53,51" fill="none" stroke="#1E293B" stroke-width="1.2" />
+                    </svg>
+                </div>
+                <div>
+                    <h5 class="text-sm font-bold text-white">Putri Hikmawati</h5>
+                    <p class="text-xs text-slate-400">© 2026 Universitas Musamus Merauke. Hak Cipta Dilindungi.</p>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <span class="text-[10px] bg-white/5 border border-white/5 px-2.5 py-1 rounded-full text-slate-400 flex items-center space-x-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-iosBlue"></span>
+                    <span>Tailwind CSS</span>
+                </span>
+                <span class="text-[10px] bg-white/5 border border-white/5 px-2.5 py-1 rounded-full text-slate-400 flex items-center space-x-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-iosPurple"></span>
+                    <span>GSAP & ScrollTrigger</span>
+                </span>
+                <span class="text-[10px] bg-white/5 border border-white/5 px-2.5 py-1 rounded-full text-slate-400 flex items-center space-x-1">
+                    <span class="w-1.5 h-1.5 rounded-full bg-iosGreen"></span>
+                    <span>iOS Premium UX</span>
+                </span>
+            </div>
+        </div>
+
+        <!-- Floating bottom iOS Dock -->
+        <div class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-white/10 backdrop-blur-xl border border-white/15 rounded-3xl p-3 shadow-2xl flex items-center space-x-4 max-w-[90%]">
+            <a href="#hero" class="dock-item p-2.5 rounded-2xl bg-white/5 hover:bg-white/15 text-slate-300 hover:text-white transition-all transform hover:-translate-y-3 duration-300 relative group" title="Kembali ke Atas">
+                <i data-lucide="home" class="w-5 h-5"></i>
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 text-[10px] bg-black text-white px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Home</span>
+            </a>
+            <div class="w-[1px] h-6 bg-white/10"></div>
+            <a href="https://instagram.com" target="_blank" class="dock-item p-2.5 rounded-2xl bg-white/5 hover:bg-gradient-to-tr hover:from-purple-600 hover:to-pink-500 text-slate-300 hover:text-white transition-all transform hover:-translate-y-3 duration-300 relative group" title="Hubungi via Instagram">
+                <i data-lucide="instagram" class="w-5 h-5"></i>
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 text-[10px] bg-black text-white px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Instagram</span>
+            </a>
+            <a href="https://linkedin.com" target="_blank" class="dock-item p-2.5 rounded-2xl bg-white/5 hover:bg-iosBlue text-slate-300 hover:text-white transition-all transform hover:-translate-y-3 duration-300 relative group" title="Hubungi via LinkedIn">
+                <i data-lucide="linkedin" class="w-5 h-5"></i>
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 text-[10px] bg-black text-white px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">LinkedIn</span>
+            </a>
+            <a href="https://github.com" target="_blank" class="dock-item p-2.5 rounded-2xl bg-white/5 hover:bg-slate-800 text-slate-300 hover:text-white transition-all transform hover:-translate-y-3 duration-300 relative group" title="Kunjungi GitHub">
+                <i data-lucide="github" class="w-5 h-5"></i>
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 text-[10px] bg-black text-white px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">GitHub</span>
+            </a>
+            <div class="w-[1px] h-6 bg-white/10"></div>
+            <button onclick="triggerNotification('🎉 Terima kasih! Anda adalah bagian dari petualangan teknologi saya.')" class="dock-item p-2.5 rounded-2xl bg-white/5 hover:bg-iosGreen text-slate-300 hover:text-white transition-all transform hover:-translate-y-3 duration-300 relative group" title="Suka Portofolio ini?">
+                <i data-lucide="heart" class="w-5 h-5"></i>
+                <span class="absolute -top-10 left-1/2 -translate-x-1/2 text-[10px] bg-black text-white px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Sukai</span>
+            </button>
+        </div>
+    </footer>
+
+    <!-- AI Chatbot Toggle Button -->
+    <button id="chat-toggle" onclick="toggleChat()" class="fixed bottom-6 right-4 sm:right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-tr from-iosBlue to-cyan-400 text-white shadow-xl shadow-iosBlue/30 flex items-center justify-center hover:scale-110 active:scale-95 transition-all border border-white/20">
+        <i data-lucide="bot" class="w-6 h-6"></i>
+    </button>
+
+    <!-- AI Chatbot Window -->
+    <div id="chat-window" class="fixed bottom-24 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] sm:w-96 h-[450px] max-h-[70vh] glass-panel rounded-3xl overflow-hidden flex flex-col hidden transform origin-bottom-right scale-95 opacity-0 transition-all duration-300 shadow-2xl border border-white/20">
+        <!-- Header -->
+        <div class="p-4 border-b border-white/10 bg-white/5 flex justify-between items-center backdrop-blur-md">
+            <div class="flex items-center space-x-3">
+                <div class="relative w-9 h-9 rounded-full bg-gradient-to-br from-iosBlue to-purple-500 flex items-center justify-center shadow-inner">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-white"></i>
+                    <span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-iosGreen rounded-full border-2 border-[#090A10]"></span>
+                </div>
+                <div>
+                    <h5 class="text-sm font-bold text-white leading-tight">AI Asisten Putri</h5>
+                    <p class="text-[10px] text-iosGreen font-semibold tracking-wide">Sedang Aktif</p>
+                </div>
+            </div>
+            <button onclick="toggleChat()" class="p-2 rounded-full hover:bg-white/10 text-slate-300 hover:text-white transition-colors active:scale-90">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+        </div>
+        
+        <!-- Chat Area -->
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4 no-scrollbar flex flex-col bg-black/20">
+            <!-- Initial Bot Message -->
+            <div class="flex items-start space-x-2">
+                <div class="w-7 h-7 rounded-full bg-iosBlue/20 border border-iosBlue/30 flex items-center justify-center flex-shrink-0 mt-1">
+                    <i data-lucide="bot" class="w-3.5 h-3.5 text-iosBlue"></i>
+                </div>
+                <div class="bg-white/10 border border-white/10 rounded-2xl rounded-tl-sm p-3 max-w-[85%] shadow-sm">
+                    <p class="text-xs text-white leading-relaxed">Halo! Aku asisten AI pintar di portofolio Putri. Ada yang ingin kamu tanyakan tentang skill, kampus, atau proyek Putri?</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-3 border-t border-white/10 bg-white/5 backdrop-blur-xl">
+            <form id="chat-form" onsubmit="handleChatSubmit(event)" class="flex items-center space-x-2 relative">
+                <input type="text" id="chat-input" class="flex-1 bg-black/40 border border-white/10 rounded-full pl-4 pr-10 py-2.5 text-xs text-white focus:outline-none focus:border-iosBlue/50 focus:ring-1 focus:ring-iosBlue/50 transition-all placeholder-slate-400" placeholder="Tanyakan sesuatu..." autocomplete="off">
+                <button type="submit" class="absolute right-1 top-1/2 -translate-y-1/2 p-2 rounded-full bg-iosBlue text-white hover:bg-blue-600 active:scale-95 transition-all shadow-md">
+                    <i data-lucide="send" class="w-3.5 h-3.5"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            initBulletproofSkills();
+        });
+        window.addEventListener('load', () => {
+            lucide.createIcons();
+            setTimeout(() => {
+                triggerNotification("👋 Halo! Selamat datang di portofolio interaktif Putri Hikmawati.");
+            }, 1500);
+        });
+
+        function initBulletproofSkills() {
+            const cards = document.querySelectorAll('.skill-card-item');
+            
+            if ('IntersectionObserver' in window) {
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('reveal-visible');
+                        }
+                    });
+                }, { threshold: 0.1 });
+
+                cards.forEach(card => observer.observe(card));
+            } else {
+                cards.forEach(card => card.classList.add('reveal-visible'));
+            }
+
+            setTimeout(() => {
+                cards.forEach(card => {
+                    if (!card.classList.contains('reveal-visible')) {
+                        card.classList.add('reveal-visible');
+                    }
+                });
+            }, 1000);
+        }
+
+        function updateClock() {
+            const now = new Date();
+            const meraukeTime = new Date(now.getTime() + (now.getTimezoneOffset() * 60000) + (9 * 3600000));
+            const hours = String(meraukeTime.getHours()).padStart(2, '0');
+            const minutes = String(meraukeTime.getMinutes()).padStart(2, '0');
+            document.getElementById('ios-clock').textContent = `${hours}:${minutes}`;
+        }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        function updateSpirit(event) {
+            const barContainer = event.currentTarget;
+            const rect = barContainer.getBoundingClientRect();
+            const clickPositionX = event.clientX - rect.left;
+            const percentage = Math.max(10, Math.min(100, Math.round((clickPositionX / rect.width) * 100)));
+            
+            document.getElementById('spirit-bar').style.width = percentage + '%';
+            document.getElementById('spirit-percent').textContent = percentage + '%';
+            
+            if (percentage > 85) {
+                triggerNotification(`🔥 Luar biasa! Semangat membara di level ${percentage}%!`);
+            } else if (percentage > 50) {
+                triggerNotification(`💪 Semangat berproses stabil di level ${percentage}%. Tetap fokus!`);
+            } else {
+                triggerNotification(`☕ Istirahat sejenak sangat bagus untuk mengisi ulang energi (${percentage}%).`);
+            }
+        }
+
+        let isMusicPlaying = false;
+        function toggleMusic(btn) {
+            isMusicPlaying = !isMusicPlaying;
+            if (isMusicPlaying) {
+                btn.innerHTML = `<i data-lucide="pause" class="w-3.5 h-3.5 fill-current"></i>`;
+                triggerNotification("🎵 Memutar: 'Langkah Awal' oleh Putri Hikmawati");
+            } else {
+                btn.innerHTML = `<i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i>`;
+                triggerNotification("⏸️ Lagu Dijeda");
+            }
+            lucide.createIcons();
+        }
+
+        let notificationTimeout;
+        function triggerNotification(text) {
+            const toast = document.getElementById('ios-notification');
+            const toastText = document.getElementById('notification-text');
+            
+            toastText.textContent = text;
+            toast.style.transform = 'translate(-50%, 0)';
+            toast.style.opacity = '1';
+            
+            clearTimeout(notificationTimeout);
+            notificationTimeout = setTimeout(() => {
+                toast.style.transform = 'translate(-50%, -150%)';
+                toast.style.opacity = '0';
+            }, 4500);
+        }
+
+        const mobileBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileBtn.addEventListener('click', () => {
+            const isHidden = mobileMenu.classList.contains('hidden');
+            if (isHidden) {
+                mobileMenu.classList.remove('hidden');
+                setTimeout(() => {
+                    mobileMenu.classList.remove('scale-95', 'opacity-0');
+                }, 10);
+            } else {
+                mobileMenu.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    mobileMenu.classList.add('hidden');
+                }, 300);
+            }
+        });
+
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    mobileMenu.classList.add('hidden');
+                }, 300);
+            });
+        });
+
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            triggerNotification(`✉️ Terima kasih ${name}! Pesan berhasil dikirim secara simulasi.`);
+            document.getElementById('contact-form').reset();
+        }
+
+        let protoState = 1;
+        function simulPrototype(btn) {
+            protoState = protoState === 1 ? 2 : 1;
+            const screenText = document.getElementById('prototype-screen-text');
+            if (protoState === 1) {
+                screenText.textContent = "Layar 1: Dasbor Utama";
+                triggerNotification("📱 Prototipe: Berpindah ke Dasbor Utama");
+            } else {
+                screenText.textContent = "Layar 2: Detail Transaksi";
+                triggerNotification("📱 Prototipe: Berpindah ke Layar Transaksi");
+            }
+        }
+
+        let flowState = 1;
+        function simulFlow() {
+            flowState = flowState < 3 ? flowState + 1 : 1;
+            const s1 = document.getElementById('flow-step-1');
+            const s2 = document.getElementById('flow-step-2');
+            const s3 = document.getElementById('flow-step-3');
+            
+            [s1, s2, s3].forEach(el => {
+                el.className = "bg-slate-900 text-slate-400 p-2 rounded-lg border border-white/5 transition-all";
+            });
+
+            if (flowState === 1) {
+                s1.className = "bg-iosPurple text-white p-2 rounded-lg border border-iosPurple/50 transition-all shadow-md shadow-iosPurple/20";
+                triggerNotification("🔄 SDLC: Tahap Analisis Kebutuhan Sistem");
+            } else if (flowState === 2) {
+                s2.className = "bg-iosPurple text-white p-2 rounded-lg border border-iosPurple/50 transition-all shadow-md shadow-iosPurple/20";
+                triggerNotification("🔄 SDLC: Tahap Desain & Pemodelan Data");
+            } else if (flowState === 3) {
+                s3.className = "bg-iosPurple text-white p-2 rounded-lg border border-iosPurple/50 transition-all shadow-md shadow-iosPurple/20";
+                triggerNotification("🔄 SDLC: Tahap Implementasi & Koding");
+            }
+        }
+
+        function simulQuery() {
+            const res = document.getElementById('sql-result-line');
+            res.classList.remove('hidden');
+            res.classList.add('animate-pulse');
+            triggerNotification("⚡ Database: Query SQL Sukses Dijalankan!");
+            setTimeout(() => {
+                res.classList.remove('animate-pulse');
+            }, 1000);
+        }
+
+        function triggerAnim(type) {
+            const ball = document.getElementById('anim-ball');
+            ball.className = "w-8 h-8 rounded-full bg-gradient-to-r from-iosGreen to-emerald-400 flex items-center justify-center text-white text-[10px] font-bold shadow-md shadow-iosGreen/30";
+            
+            if (type === 'bounce') {
+                ball.classList.add('animate-bounce');
+                triggerNotification("🟢 Animasi: Efek Pantulan (Bounce) Aktif");
+            } else if (type === 'pulse') {
+                ball.classList.add('animate-pulse');
+                triggerNotification("🟢 Animasi: Efek Cahaya (Pulse) Aktif");
+            } else if (type === 'spin') {
+                ball.classList.add('animate-spin');
+                triggerNotification("🟢 Animasi: Efek Putaran (Spin) Aktif");
+            }
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            const x = (e.clientX / window.innerWidth - 0.5) * 40;
+            const y = (e.clientY / window.innerHeight - 0.5) * 40;
+            
+            gsap.to('#orb-1', {x: x, y: y, duration: 2, ease: "power2.out"});
+            gsap.to('#orb-2', {x: -x, y: -y, duration: 2.5, ease: "power2.out"});
+            gsap.to('#orb-3', {x: x * 0.5, y: -y * 0.5, duration: 3, ease: "power2.out"});
+        });
+
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.from('#hero h1, #hero p, #hero a, #hero .inline-flex', {
+            opacity: 0,
+            y: 40,
+            duration: 1.2,
+            stagger: 0.15,
+            ease: "power4.out"
+        });
+
+        gsap.from('#hero .lg\\:col-span-5', {
+            opacity: 0,
+            scale: 0.9,
+            duration: 1.5,
+            delay: 0.3,
+            ease: "elastic.out(1, 0.75)"
+        });
+
+        document.querySelectorAll('.story-card').forEach((card) => {
+            gsap.from(card, {
+                scrollTrigger: {
+                    trigger: card,
+                    start: "top 85%",
+                    toggleActions: "play none none none"
+                },
+                opacity: 0,
+                x: -30,
+                duration: 1,
+                ease: "power3.out"
+            });
+        });
+
+        gsap.from('#experience .lg\\:col-span-5', {
+            scrollTrigger: {
+                trigger: '#experience',
+                start: "top 80%",
+            },
+            opacity: 0,
+            scale: 0.85,
+            duration: 1.2,
+            ease: "power3.out"
+        });
+
+        const sections = document.querySelectorAll('main, section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        window.addEventListener('scroll', () => {
+            let currentSectionId = '';
+            sections.forEach(sec => {
+                const sectionTop = sec.offsetTop;
+                if (pageYOffset >= (sectionTop - 180)) {
+                    currentSectionId = sec.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('nav-active');
+                if (link.getAttribute('data-section') === currentSectionId) {
+                    link.classList.add('nav-active');
+                }
+            });
+        });
+
+        const chatWindow = document.getElementById('chat-window');
+        const chatMessages = document.getElementById('chat-messages');
+        const chatInput = document.getElementById('chat-input');
+        
+        function toggleChat() {
+            const isHidden = chatWindow.classList.contains('hidden');
+            if (isHidden) {
+                chatWindow.classList.remove('hidden');
+                setTimeout(() => {
+                    chatWindow.classList.remove('scale-95', 'opacity-0');
+                    chatInput.focus();
+                }, 10);
+                // Matikan notif pop-up karena pengguna fokus ke chat
+                triggerNotification("🤖 AI Asisten diaktifkan.");
+            } else {
+                chatWindow.classList.add('scale-95', 'opacity-0');
+                setTimeout(() => {
+                    chatWindow.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Integrasi AI Generatif Asli (Generative AI)
+        let chatHistory = [];
+        
+        const systemPrompt = `Kamu adalah 'AI Asisten Putri', asisten virtual cerdas yang hidup di dalam website portofolio Putri Hikmawati.
+        Informasi tentang penciptamu (Putri):
+        - Nama: Putri Hikmawati
+        - Jurusan: Sistem Informasi, Universitas Musamus Merauke, Papua Selatan.
+        - Keahlian Utama: UI/UX Design (Figma, Prototyping), System Analysis (UML, SDLC, Agile), Database Design (MySQL), Frontend Web (HTML, Tailwind CSS, JavaScript).
+        - Tujuan karir: Menjadi Analis Sistem yang handal, memajukan digitalisasi di timur Indonesia.
+        
+        Gaya bicaramu: 
+        1. Ramah, cerdas, antusias, logis, dan menggunakan bahasa Indonesia yang santai tapi tetap sopan (seperti teman IT yang asik).
+        2. Selalu gunakan emoji yang relevan agar percakapan hidup.
+        3. JAWAB APA SAJA! Jika user bertanya tentang coding, matematika, sains, resep masakan, atau sekadar curhat, JAWAB dengan pintar dan akurat layaknya AI canggih sungguhan.
+        4. Tetap ingat identitasmu: Sekalipun kamu bisa menjawab segala hal di dunia ini, sesekali selipkan bahwa kamu adalah asisten kebanggaan Putri Hikmawati, atau hubungkan jawabanmu dengan dunia teknologi dan sistem informasi.
+        5. Jangan pernah menyebut bahwa kamu adalah buatan Google, OpenAI, atau lainnya, sebut saja dirimu "AI cerdas buatan ekosistem portofolio Putri".
+        6. Berikan jawaban yang terstruktur, rapi, dan jangan terlalu panjang (maksimal 2-3 paragraf). Gunakan format tebal (bold) untuk kata kunci penting.`;
+
+        async function handleChatSubmit(e) {
+            e.preventDefault();
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Tambah pesan user
+            appendMessage('user', message);
+            chatInput.value = '';
+
+            // Simpan riwayat percakapan user untuk konteks (memory)
+            chatHistory.push({ role: "user", parts: [{ text: message }] });
+
+            // Munculkan indikator mengetik
+            showTypingIndicator();
+
+            try {
+                // Koneksi ke Model AI Generatif Asli
+                const apiKey = "ISI SENDIRI BANGSAT"; 
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+
+                const payload = {
+                    contents: chatHistory,
+                    systemInstruction: {
+                        parts: [{ text: systemPrompt }]
+                    }
+                };
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                removeTypingIndicator();
+
+                if (result.candidates && result.candidates.length > 0) {
+                    const aiReply = result.candidates[0].content.parts[0].text;
+                    appendMessage('ai', aiReply);
+                    // Simpan riwayat percakapan AI agar ia nyambung kalau diajak ngobrol lagi
+                    chatHistory.push({ role: "model", parts: [{ text: aiReply }] });
+                } else {
+                    appendMessage('ai', "Aduh, terjadi gangguan pemikiran di otak digital-ku. Coba tanya lagi ya! 😅");
+                }
+            } catch (error) {
+                console.error("AI Error:", error);
+                removeTypingIndicator();
+                appendMessage('ai', "Waduh, koneksi ke otak AI-ku terputus. Pastikan internetmu lancar ya! 🔌🤖");
+            }
+        }
+
+        function appendMessage(sender, text) {
+            const msgDiv = document.createElement('div');
+            
+            if (sender === 'user') {
+                msgDiv.className = 'flex items-start justify-end space-x-2 translate-y-4 opacity-0 transition-all duration-300 ease-out';
+                msgDiv.innerHTML = `
+                    <div class="bg-gradient-to-r from-iosBlue to-cyan-500 rounded-2xl rounded-tr-sm p-3 max-w-[85%] shadow-lg shadow-iosBlue/20">
+                        <p class="text-xs text-white leading-relaxed font-medium">${text}</p>
+                    </div>
+                `;
+            } else {
+                // Parsing Markdown Sederhana (Bold, Italic, Newline) agar format teks AI rapi
+                let formattedText = text.replace(/\*\*(.*?)\*\*/g, '<strong class="text-white font-black">$1</strong>');
+                formattedText = formattedText.replace(/\*(.*?)\*/g, '<em class="text-slate-300 italic">$1</em>');
+                formattedText = formattedText.replace(/\n/g, '<br>');
+                
+                msgDiv.className = 'flex items-start space-x-2 translate-y-4 opacity-0 transition-all duration-300 ease-out';
+                msgDiv.innerHTML = `
+                    <div class="w-7 h-7 rounded-full bg-iosBlue/20 border border-iosBlue/30 flex items-center justify-center flex-shrink-0 mt-1 shadow-sm">
+                        <i data-lucide="bot" class="w-3.5 h-3.5 text-iosBlue"></i>
+                    </div>
+                    <div class="bg-white/10 border border-white/10 rounded-2xl rounded-tl-sm p-3 max-w-[85%] shadow-lg shadow-black/10 overflow-x-hidden">
+                        <p class="text-xs text-slate-200 leading-relaxed">${formattedText}</p>
+                    </div>
+                `;
+            }
+            
+            chatMessages.appendChild(msgDiv);
+            lucide.createIcons();
+            
+            // Animasi kemunculan pesan (Slide up)
+            setTimeout(() => {
+                msgDiv.classList.remove('translate-y-4', 'opacity-0');
+            }, 50);
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.className = 'flex items-start space-x-2 translate-y-2 opacity-0 transition-all duration-300 ease-out';
+            typingDiv.innerHTML = `
+                <div class="w-7 h-7 rounded-full bg-iosBlue/20 border border-iosBlue/30 flex items-center justify-center flex-shrink-0 mt-1 shadow-sm">
+                    <i data-lucide="bot" class="w-3.5 h-3.5 text-iosBlue"></i>
+                </div>
+                <div class="bg-white/10 border border-white/10 rounded-2xl rounded-tl-sm px-4 py-3 flex space-x-1.5 items-center h-9">
+                    <div class="w-1.5 h-1.5 bg-slate-400 rounded-full typing-dot"></div>
+                    <div class="w-1.5 h-1.5 bg-slate-400 rounded-full typing-dot"></div>
+                    <div class="w-1.5 h-1.5 bg-slate-400 rounded-full typing-dot"></div>
+                </div>
+            `;
+            chatMessages.appendChild(typingDiv);
+            lucide.createIcons();
+            
+            setTimeout(() => {
+                typingDiv.classList.remove('translate-y-2', 'opacity-0');
+            }, 50);
+
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typingDiv = document.getElementById('typing-indicator');
+            if (typingDiv) {
+                typingDiv.remove();
+            }
+        }
+    </script>
+</body>
+</html>
